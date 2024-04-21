@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" type="text/css" href="static/style/style.css">
+    <title>Login</title>
+</head>
+<body>
+    <form method="post">
+        <label for="password">Password</label><br>
+        <input type="password" id="password" name="password"><br><br>
+        <input type="submit" value="Submit">
+        {% if message %}
+        <p style="color: red;">{{ message }}</p>
+        {% endif %}
+    </form>
+</body>
+</html>
