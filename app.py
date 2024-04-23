@@ -1,7 +1,7 @@
 import keyring
 from flask import Flask, render_template, request, redirect, url_for
 import db_module
-from cryptography.fernet import Fernet
+from cryptography.fernet import Fernet, InvalidToken
 import pyperclip
 
 
@@ -24,12 +24,15 @@ def auth():
 @app.route('/decode', methods=['GET', 'POST'])
 def decode():
     if request.method == 'POST':
-        if 'decode' in request.form:
-            encrypted_message = request.form['decode']
-            key = Fernet(keyring.get_password(keyring.get_password('vault_key', 'key')))
-            decrypted_message = key.decrypt(encrypted_message.encode()).decode()
-            pyperclip.copy(decrypted_message)
-            return render_template('decode.html', message='Текст скопирован в буфер обмена')
+        if 'password' in request.form:
+            try:
+                key = Fernet(keyring.get_password('vault_key', 'key'))
+                encrypted_message = request.form['password'].encode()
+                decrypted_message = key.decrypt(encrypted_message).decode()
+                pyperclip.copy(decrypted_message)
+                return render_template('decode.html', copy='Скопирован в буфер обмена')
+            except InvalidToken:
+                return render_template('decode.html', message='Ошибка расшифровки')
         else:
             return render_template('decode.html', message='Ошибка')
     else:
@@ -38,3 +41,4 @@ def decode():
 
 if __name__ == '__main__':
     app.run(debug=True)
+
