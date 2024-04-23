@@ -9,8 +9,11 @@
         <input type="password" id="password" name="password"><br><br>
         <input type="submit" value="decode">
         {% if message %}
-        <p style="black: red;">{{ message }}</p>
+        <p style="color: red;">{{ message }}</p>
         {% endif %}
     </form>
+    {% if copy %}
+     <p style="text-align: center;">{{ copy }}</p>
+    {% endif %}
 </body>
 </html>
