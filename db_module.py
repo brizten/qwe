@@ -36,6 +36,24 @@ def get_pwd():
             cursor.close()
             conn.close()
 
+def getUser():
+    conn = db_connect()
+    if conn:
+        try:
+            cursor = conn.cursor()
+            cursor.execute('select * from admin_passwords;')
+            data = cursor.fetchone()
+            if data:
+                return data
+
+        except psycopg2.Error as e:
+            print(e)
+        finally:
+            cursor.close()
+            conn.close()
+
+
+
 
 print(get_pwd())
 
