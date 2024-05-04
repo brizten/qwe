@@ -44,3 +44,21 @@ EXECUTE FUNCTION update_prev_password();
 
 DROP TRIGGER IF EXISTS before_password_update ON admin_passwords;
 
+
+
+Executing "step_script" stage of the job script
+00:01
+$ Invoke-WebRequest -Uri 'http://github.com/allure-framework/allurectl/releases/latest/download/allurectl_windows_amd64.exe' -OutFile 'allurectl.exe'
+Invoke-WebRequest : The request was aborted: Could not create SSL/TLS secure 
+channel.
+At line:270 char:1
++ Invoke-WebRequest -Uri 
+'http://github.com/allure-framework/allurectl/releases/la ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~
+    + CategoryInfo          : InvalidOperation: (System.Net.HttpWebRequest:Htt 
+   pWebRequest) [Invoke-WebRequest], WebException
+    + FullyQualifiedErrorId : WebCmdletWebResponseException,Microsoft.PowerShe 
+   ll.Commands.InvokeWebRequestCommand
+ 
+
