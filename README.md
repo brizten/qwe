@@ -60,5 +60,33 @@ At line:270 char:1
    pWebRequest) [Invoke-WebRequest], WebException
     + FullyQualifiedErrorId : WebCmdletWebResponseException,Microsoft.PowerShe 
    ll.Commands.InvokeWebRequestCommand
+
+
+
+build-job:
+  stage: test
+  image: gradle
+  variables:
+    ALLURE_ENDPOINT: https://allure-testops.halykbank.nb
+    ALLURE_PROJECT_ID: 6
+    ALLURE_RESULTS: build/allure-results
+  before_script:
+    - Invoke-WebRequest -Uri 'http://github.com/allure-framework/allurectl/releases/latest/download/allurectl_windows_amd64.exe' -OutFile 'allurectl.exe'
+    - Set-ExecutionPolicy -ExecutionPolicy Unrestricted -Force
+
+  script: 
+    - ./allurectl watch -- gradle clean test
+
+test-job1:
+  stage: test 
+  
+  script:
+    - ./allurectl watch -- gradle clean test
+  
+deply-prod:
+  stage: deploy
+ 
+  script:
+    - ./allurectl watch -- gradle clean test
  
 
