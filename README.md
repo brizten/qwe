@@ -115,5 +115,58 @@ Could not fetch URL https://nexus.halykbank.nb/repository/pypi-hosted/simple/psy
 ERROR: Could not find a version that satisfies the requirement psycopg2 (from versions: none)
 ERROR: No matching distribution found for psycopg2
 
+
+ERROR: Could not install packages due to an OSError.
+Traceback (most recent call last):
+  File "/usr/lib/python3/dist-packages/pip/_internal/commands/install.py", line 339, in run
+    requirement_set = resolver.resolve(
+  File "/usr/lib/python3/dist-packages/pip/_internal/resolution/resolvelib/resolver.py", line 94, in resolve
+    result = self._result = resolver.resolve(
+  File "/usr/lib/python3/dist-packages/pip/_vendor/resolvelib/resolvers.py", line 481, in resolve
+    state = resolution.resolve(requirements, max_rounds=max_rounds)
+  File "/usr/lib/python3/dist-packages/pip/_vendor/resolvelib/resolvers.py", line 348, in resolve
+    self._add_to_criteria(self.state.criteria, r, parent=None)
+  File "/usr/lib/python3/dist-packages/pip/_vendor/resolvelib/resolvers.py", line 172, in _add_to_criteria
+    if not criterion.candidates:
+  File "/usr/lib/python3/dist-packages/pip/_vendor/resolvelib/structs.py", line 151, in __bool__
+    return bool(self._sequence)
+  File "/usr/lib/python3/dist-packages/pip/_internal/resolution/resolvelib/found_candidates.py", line 155, in __bool__
+    return any(self)
+  File "/usr/lib/python3/dist-packages/pip/_internal/resolution/resolvelib/found_candidates.py", line 143, in <genexpr>
+    return (c for c in iterator if id(c) not in self._incompatible_ids)
+  File "/usr/lib/python3/dist-packages/pip/_internal/resolution/resolvelib/found_candidates.py", line 44, in _iter_built
+    for version, func in infos:
+  File "/usr/lib/python3/dist-packages/pip/_internal/resolution/resolvelib/factory.py", line 294, in iter_index_candidate_infos
+    result = self._finder.find_best_candidate(
+  File "/usr/lib/python3/dist-packages/pip/_internal/index/package_finder.py", line 868, in find_best_candidate
+    candidates = self.find_all_candidates(project_name)
+  File "/usr/lib/python3/dist-packages/pip/_internal/index/package_finder.py", line 809, in find_all_candidates
+    page_candidates = list(page_candidates_it)
+  File "/usr/lib/python3/dist-packages/pip/_internal/index/sources.py", line 134, in page_candidates
+    yield from self._candidates_from_page(self._link)
+  File "/usr/lib/python3/dist-packages/pip/_internal/index/package_finder.py", line 769, in process_project_url
+    html_page = self._link_collector.fetch_page(project_url)
+  File "/usr/lib/python3/dist-packages/pip/_internal/index/collector.py", line 604, in fetch_page
+    return _get_html_page(location, session=self.session)
+  File "/usr/lib/python3/dist-packages/pip/_internal/index/collector.py", line 509, in _get_html_page
+    resp = _get_html_response(url, session=session)
+  File "/usr/lib/python3/dist-packages/pip/_internal/index/collector.py", line 125, in _get_html_response
+    resp = session.get(
+  File "/usr/lib/python3/dist-packages/pip/_vendor/requests/sessions.py", line 542, in get
+    return self.request('GET', url, **kwargs)
+  File "/usr/lib/python3/dist-packages/pip/_internal/network/session.py", line 454, in request
+    return super().request(method, url, *args, **kwargs)
+  File "/usr/lib/python3/dist-packages/pip/_vendor/requests/sessions.py", line 529, in request
+    resp = self.send(prep, **send_kwargs)
+  File "/usr/lib/python3/dist-packages/pip/_vendor/requests/sessions.py", line 645, in send
+    r = adapter.send(request, **kwargs)
+  File "/usr/lib/python3/dist-packages/pip/_vendor/cachecontrol/adapter.py", line 57, in send
+    resp = super(CacheControlAdapter, self).send(request, **kw)
+  File "/usr/lib/python3/dist-packages/pip/_vendor/requests/adapters.py", line 417, in send
+    self.cert_verify(conn, request.url, verify, cert)
+  File "/usr/lib/python3/dist-packages/pip/_vendor/requests/adapters.py", line 228, in cert_verify
+    raise IOError("Could not find a suitable TLS CA certificate bundle, "
+OSError: Could not find a suitable TLS CA certificate bundle, invalid path: False
+
  
 
