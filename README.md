@@ -88,5 +88,32 @@ deply-prod:
  
   script:
     - ./allurectl watch -- gradle clean test
+
+
+
+[global]
+index = https://nexus.halykbank.nb/repository/Pypi/pypi
+index-url = https://nexus.halykbank.nb/repository/Pypi/simple
+extra-index-url = https://nexus.halykbank.nb/repository/pypi-hosted/simple
+trusted-host = nexus.halykbank.nb
+
+
+ pip install psycopg2
+Looking in indexes: https://nexus.halykbank.nb/repository/Pypi/simple, https://nexus.halykbank.nb/repository/pypi-hosted/simple
+WARNING: Retrying (Retry(total=4, connect=None, read=None, redirect=None, status=None)) after connection broken by 'SSLError(SSLError(1, '[SSL: UNSAFE_LEGACY_RENEGOTIATION_DISABLED] unsafe legacy renegotiation disabled (_ssl.c:1007)'))': /repository/Pypi/simple/psycopg2/
+WARNING: Retrying (Retry(total=3, connect=None, read=None, redirect=None, status=None)) after connection broken by 'SSLError(SSLError(1, '[SSL: UNSAFE_LEGACY_RENEGOTIATION_DISABLED] unsafe legacy renegotiation disabled (_ssl.c:1007)'))': /repository/Pypi/simple/psycopg2/
+WARNING: Retrying (Retry(total=2, connect=None, read=None, redirect=None, status=None)) after connection broken by 'SSLError(SSLError(1, '[SSL: UNSAFE_LEGACY_RENEGOTIATION_DISABLED] unsafe legacy renegotiation disabled (_ssl.c:1007)'))': /repository/Pypi/simple/psycopg2/
+WARNING: Retrying (Retry(total=1, connect=None, read=None, redirect=None, status=None)) after connection broken by 'SSLError(SSLError(1, '[SSL: UNSAFE_LEGACY_RENEGOTIATION_DISABLED] unsafe legacy renegotiation disabled (_ssl.c:1007)'))': /repository/Pypi/simple/psycopg2/
+WARNING: Retrying (Retry(total=0, connect=None, read=None, redirect=None, status=None)) after connection broken by 'SSLError(SSLError(1, '[SSL: UNSAFE_LEGACY_RENEGOTIATION_DISABLED] unsafe legacy renegotiation disabled (_ssl.c:1007)'))': /repository/Pypi/simple/psycopg2/
+Could not fetch URL https://nexus.halykbank.nb/repository/Pypi/simple/psycopg2/: There was a problem confirming the ssl certificate: HTTPSConnectionPool(host='nexus.halykbank.nb', port=443): Max retries exceeded with url: /repository/Pypi/simple/psycopg2/ (Caused by SSLError(SSLError(1, '[SSL: UNSAFE_LEGACY_RENEGOTIATION_DISABLED] unsafe legacy renegotiation disabled (_ssl.c:1007)'))) - skipping
+WARNING: Retrying (Retry(total=4, connect=None, read=None, redirect=None, status=None)) after connection broken by 'SSLError(SSLError(1, '[SSL: UNSAFE_LEGACY_RENEGOTIATION_DISABLED] unsafe legacy renegotiation disabled (_ssl.c:1007)'))': /repository/pypi-hosted/simple/psycopg2/
+WARNING: Retrying (Retry(total=3, connect=None, read=None, redirect=None, status=None)) after connection broken by 'SSLError(SSLError(1, '[SSL: UNSAFE_LEGACY_RENEGOTIATION_DISABLED] unsafe legacy renegotiation disabled (_ssl.c:1007)'))': /repository/pypi-hosted/simple/psycopg2/
+WARNING: Retrying (Retry(total=2, connect=None, read=None, redirect=None, status=None)) after connection broken by 'SSLError(SSLError(1, '[SSL: UNSAFE_LEGACY_RENEGOTIATION_DISABLED] unsafe legacy renegotiation disabled (_ssl.c:1007)'))': /repository/pypi-hosted/simple/psycopg2/
+WARNING: Retrying (Retry(total=1, connect=None, read=None, redirect=None, status=None)) after connection broken by 'SSLError(SSLError(1, '[SSL: UNSAFE_LEGACY_RENEGOTIATION_DISABLED] unsafe legacy renegotiation disabled (_ssl.c:1007)'))': /repository/pypi-hosted/simple/psycopg2/
+WARNING: Retrying (Retry(total=0, connect=None, read=None, redirect=None, status=None)) after connection broken by 'SSLError(SSLError(1, '[SSL: UNSAFE_LEGACY_RENEGOTIATION_DISABLED] unsafe legacy renegotiation disabled (_ssl.c:1007)'))': /repository/pypi-hosted/simple/psycopg2/
+Could not fetch URL https://nexus.halykbank.nb/repository/pypi-hosted/simple/psycopg2/: There was a problem confirming the ssl certificate: HTTPSConnectionPool(host='nexus.halykbank.nb', port=443): Max retries exceeded with url: /repository/pypi-hosted/simple/psycopg2/ (Caused by SSLError(SSLError(1, '[SSL: UNSAFE_LEGACY_RENEGOTIATION_DISABLED] unsafe legacy renegotiation disabled (_ssl.c:1007)'))) - skipping
+ERROR: Could not find a version that satisfies the requirement psycopg2 (from versions: none)
+ERROR: No matching distribution found for psycopg2
+
  
 
