@@ -13,9 +13,11 @@ app.config['SESSION_PERMANENT'] = False
 app.config['PERMANENT_SESSION_LIFETIME'] = 60
 Session(app)
 
+
 @app.before_request
 def before_request():
     session.modified = True
+
 
 @app.route('/', methods=['GET', 'POST'])
 def auth():
@@ -30,19 +32,24 @@ def auth():
     else:
         return render_template('login.html')
 
+
 @app.route('/decode', methods=['GET', 'POST'])
 def decode():
     if not session.get('authenticated'):
         return redirect(url_for('auth'))
 
     if request.method == 'POST':
-        if 'password' in request.form:
+        if 'db_name' in request.form:
             try:
-                key = Fernet(keyring.get_password('vault_key', 'key'))
-                encrypted_message = request.form['password'].encode()
-                decrypted_message = key.decrypt(encrypted_message).decode()
-                pyperclip.copy(decrypted_message)
-                return render_template('decode.html', copy='Скопирован в буфер обмена')
+                pwd = db_module.db_pass(request.form['db_name'])
+                if pwd:
+                    key = Fernet(keyring.get_password('vault_key', 'key'))
+                    encrypted_message = pwd.encode()
+                    decrypted_message = key.decrypt(encrypted_message).decode()
+                    pyperclip.copy(decrypted_message)
+                    return render_template('decode.html', copy='Скопирован в буфер обмена')
+                else:
+                    return render_template('decode.html', message='такой нет :)')
             except InvalidToken:
                 return render_template('decode.html', message='Ошибка расшифровки')
         else:
