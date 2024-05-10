@@ -1,6 +1,6 @@
 import psycopg2
 import keyring
-
+import time
 
 def db_connect():
     try:
@@ -41,7 +41,7 @@ def db_pass(db_name):
     if conn:
         try:
             cursor = conn.cursor()
-            cursor.execute(f"SELECT actual_password FROM passwords_test_vault WHERE db_name = '{db_name}'")
+            cursor.execute(f"SELECT actual_password FROM passwords_test_vault WHERE db_name = '{db_name}';")
             data = cursor.fetchone()
 
             if data:
@@ -54,5 +54,18 @@ def db_pass(db_name):
             conn.close()
 
 
-print(get_pwd())
+def write_logs(system_name, computer_name):
+    conn = db_connect()
+    if conn:
+        try:
+            cursor = conn.cursor()
+            cursor.execute("INSERT INTO logs (date_of, system_name, computer_name) VALUES (NOW(), %s, %s)", (system_name, computer_name ))
+            conn.commit()
+            print('ok')
+        except (Exception, psycopg2.DatabaseError) as e:
+            print(e)
+        finally:
+            cursor.close()
+            conn.close()
 
+print(get_pwd())

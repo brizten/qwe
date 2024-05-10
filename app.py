@@ -4,6 +4,7 @@ from flask_session import Session
 import db_module
 from cryptography.fernet import Fernet, InvalidToken
 import pyperclip
+import socket
 
 app = Flask(__name__)
 app.secret_key = '123'
@@ -43,6 +44,7 @@ def decode():
             try:
                 pwd = db_module.db_pass(request.form['db_name'])
                 if pwd:
+                    db_module.write_logs(request.form['db_name'], socket.gethostname())
                     key = Fernet(keyring.get_password('vault_key', 'key'))
                     encrypted_message = pwd.encode()
                     decrypted_message = key.decrypt(encrypted_message).decode()
