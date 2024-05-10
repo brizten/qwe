@@ -1,7 +1,7 @@
 from cryptography.fernet import Fernet
 
 # Define the key
-key = b'DHJDAOFPOqTX6ERGTpgaFxersf713KytTICSwQVGAqQ='
+key = b''
 
 # Create a Fernet cipher instance with the key
 cipher = Fernet(key)
