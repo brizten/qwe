@@ -5,13 +5,17 @@ import db_module
 from cryptography.fernet import Fernet, InvalidToken
 import pyperclip
 import socket
+import redis
+import time
+
+redis_cli = redis.Redis(host='localhost', port='6379', db=0)
 
 app = Flask(__name__)
 app.secret_key = '123'
 
 app.config['SESSION_TYPE'] = 'filesystem'
 app.config['SESSION_PERMANENT'] = False
-app.config['PERMANENT_SESSION_LIFETIME'] = 60
+app.config['PERMANENT_SESSION_LIFETIME'] = 600
 Session(app)
 
 
@@ -42,13 +46,12 @@ def decode():
     if request.method == 'POST':
         if 'db_name' in request.form:
             try:
-                pwd = db_module.db_pass(request.form['db_name'])
+                db_name = request.form['db_name'].lower()
+                pwd = db_module.db_pass(db_name)
                 if pwd:
-                    db_module.write_logs(request.form['db_name'], socket.gethostname())
-                    key = Fernet(keyring.get_password('vault_key', 'key'))
-                    encrypted_message = pwd.encode()
-                    decrypted_message = key.decrypt(encrypted_message).decode()
-                    pyperclip.copy(decrypted_message)
+                    db_module.write_logs(db_name, socket.gethostname())
+                    decoder(pwd)
+                    redis_writer(db_name, 30)
                     return render_template('decode.html', copy='Скопирован в буфер обмена')
                 else:
                     return render_template('decode.html', message='такой нет :)')
@@ -58,6 +61,18 @@ def decode():
             return render_template('decode.html', message='Ошибка')
     else:
         return render_template('decode.html')
+
+
+def redis_writer(db_name, exptime):
+    redis_cli.set(db_name, f'{time.ctime(time.time())}, system: {db_name}')
+    redis_cli.expire(db_name, exptime)
+
+
+def decoder(pwd):
+    key = Fernet(keyring.get_password('vault_key', 'key'))
+    encrypted_message = pwd.encode()
+    decrypted_message = key.decrypt(encrypted_message).decode()
+    pyperclip.copy(decrypted_message)
 
 
 if __name__ == '__main__':

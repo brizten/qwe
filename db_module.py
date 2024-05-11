@@ -1,6 +1,7 @@
 import psycopg2
 import keyring
 import time
+import asyncio
 
 def db_connect():
     try:
@@ -61,11 +62,27 @@ def write_logs(system_name, computer_name):
             cursor = conn.cursor()
             cursor.execute("INSERT INTO logs (date_of, system_name, computer_name) VALUES (NOW(), %s, %s)", (system_name, computer_name ))
             conn.commit()
-            print('ok')
+            print('logs commited')
         except (Exception, psycopg2.DatabaseError) as e:
             print(e)
         finally:
             cursor.close()
             conn.close()
+
+async def password_changer():
+    conn = db_connect()
+    if conn:
+        try:
+            cursor = conn.cursor()
+            await asyncio.sleep(20)
+            cursor.execute('select random_data()')
+            conn.commit()
+            print('password changed')
+        except (Exception, psycopg2.DatabaseError) as e:
+            print(e)
+        finally:
+            cursor.close()
+            conn.close()
+
 
 print(get_pwd())
