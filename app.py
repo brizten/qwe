@@ -5,13 +5,11 @@ import db_module
 from cryptography.fernet import Fernet, InvalidToken
 import pyperclip
 import socket
-import redis
-import time
-
-redis_cli = redis.Redis(host='localhost', port='6379', db=0)
+import redis_module
+import threading
 
 app = Flask(__name__)
-app.secret_key = '123'
+app.secret_key = 'your_secret_key'  # Change this to a secure random value
 
 app.config['SESSION_TYPE'] = 'filesystem'
 app.config['SESSION_PERMANENT'] = False
@@ -33,9 +31,8 @@ def auth():
             session['authenticated'] = True
             return redirect(url_for('decode'))
         else:
-            return render_template('login.html', message='Invalid password. Please try again')
-    else:
-        return render_template('login.html')
+            return render_template('login.html', message='Invalid password. Please try again.')
+    return render_template('login.html')
 
 
 @app.route('/decode', methods=['GET', 'POST'])
@@ -44,31 +41,26 @@ def decode():
         return redirect(url_for('auth'))
 
     if request.method == 'POST':
-        if 'db_name' in request.form:
+        db_name = request.form.get('db_name')
+        if db_name:
             try:
-                db_name = request.form['db_name'].lower()
+                db_name = db_name.lower()
                 pwd = db_module.db_pass(db_name)
                 if pwd:
                     db_module.write_logs(db_name, socket.gethostname())
-                    decoder(pwd)
-                    redis_writer(db_name, 30)
-                    return render_template('decode.html', copy='Скопирован в буфер обмена')
+                    decode_tocopy(pwd)
+                    redis_module.redis_expire(db_name, 50)
+                    return render_template('decode.html', copy='Copied to clipboard.')
                 else:
-                    return render_template('decode.html', message='такой нет :)')
+                    return render_template('decode.html', message='Database not found.')
             except InvalidToken:
-                return render_template('decode.html', message='Ошибка расшифровки')
+                return render_template('decode.html', message='Decryption error.')
         else:
-            return render_template('decode.html', message='Ошибка')
-    else:
-        return render_template('decode.html')
+            return render_template('decode.html', message='Database name is required.')
+    return render_template('decode.html')
 
 
-def redis_writer(db_name, exptime):
-    redis_cli.set(db_name, f'{time.ctime(time.time())}, system: {db_name}')
-    redis_cli.expire(db_name, exptime)
-
-
-def decoder(pwd):
+def decode_tocopy(pwd):
     key = Fernet(keyring.get_password('vault_key', 'key'))
     encrypted_message = pwd.encode()
     decrypted_message = key.decrypt(encrypted_message).decode()
@@ -76,4 +68,5 @@ def decoder(pwd):
 
 
 if __name__ == '__main__':
+    threading.Thread(target=redis_module.monitor_redis, daemon=True).start()
     app.run(debug=True)
