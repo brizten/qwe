@@ -1,12 +1,15 @@
 import keyring
 from flask import Flask, render_template, request, redirect, url_for, session
 from flask_session import Session
-import db_module
+#import db_module
 from cryptography.fernet import Fernet, InvalidToken
 import pyperclip
-import socket
 import redis_module
 import threading
+import db_func
+from sqlalchemy.orm import sessionmaker
+from db_modulev2 import admin_password, engine, sessionsql
+
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'  # Change this to a secure random value
@@ -24,7 +27,7 @@ def before_request():
 
 @app.route('/', methods=['GET', 'POST'])
 def auth():
-    pwd = db_module.get_pwd()
+    pwd = db_func.get_pwd(sessionsql)
     if request.method == 'POST':
         passw = request.form['password']
         if passw == pwd:
@@ -45,9 +48,9 @@ def decode():
         if db_name:
             try:
                 db_name = db_name.lower()
-                pwd = db_module.db_pass(db_name)
+                pwd = db_func.db_pass(db_name)
                 if pwd:
-                    db_module.write_logs(db_name, socket.gethostname())
+                    db_func.write_logs(db_name)
                     decode_tocopy(pwd)
                     redis_module.redis_expire(db_name, 50)
                     return render_template('decode.html', copy='Copied to clipboard.')
